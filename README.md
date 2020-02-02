@@ -15,6 +15,10 @@ RaspberryPie weather station
 #### To start influxdb
 `sudo systemctl start influxdb`
 
+or
+
+`sudo service influxdb start`
+
 ### Temp sensor:  DS18B20
 Uses one-wire interface
 Need to setup one-wire interface on one of the gpio pins (default is usually gpio 4):
