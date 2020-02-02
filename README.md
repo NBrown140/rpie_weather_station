@@ -3,11 +3,15 @@ RaspberryPie weather station
 
 
 ### InfluxDB
+
 #### To install influxdb on debian stretch
 `sudo sh install_influxdb.sh`
-#### To run influxdb at startupn (optional)
+
+#### To run influxdb at startup (optional)
 `sudo systemctl unmask influxdb`
+
 `sudo systemctl enable influxdb`
+
 #### To start influxdb
 `sudo systemctl start influxdb`
 
