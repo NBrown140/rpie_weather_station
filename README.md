@@ -2,22 +2,18 @@
 RaspberryPie weather station
 
 
-### InfluxDB
+### Initial Setup
 
-#### To install influxdb on debian stretch
-`sudo sh install_influxdb.sh`
+#### Run setup script
 
-#### To run influxdb at startup (optional)
-`sudo systemctl unmask influxdb`
+`sudo sh setup.sh`
 
-`sudo systemctl enable influxdb`
+This will install InfluxDB, Grafana, Python3 and the required python packages. The scirpt will also start the grafana and influx server sevices. To be sure the services are running:
 
-#### To start influxdb
-`sudo systemctl start influxdb`
+`sudo systemctl status grafana-server`
+`sudo systemctl status influxdb`
 
-or
 
-`sudo service influxdb start`
 
 ### Temp sensor:  DS18B20
 Uses one-wire interface
