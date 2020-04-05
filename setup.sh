@@ -44,3 +44,6 @@ apt -y install python3 python3-pip
 python3 -m pip install -U pip setuptools
 python3 -m pip install -r requirements.txt
 
+# Install dependency for circuitpython (which interfaces DHT11 humidity sensor)
+apt-get -y install libgpiod2
+

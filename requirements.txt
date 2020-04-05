@@ -1,1 +1,2 @@
 influxdb
+adafruit-circuitpython-dht

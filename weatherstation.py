@@ -4,6 +4,8 @@ import time
 from datetime import datetime
 
 from influxdb import InfluxDBClient
+import board
+import adafruit_dht
 
 ### Initialize db connection
 # Connect to local db
@@ -18,7 +20,7 @@ client.switch_database('weather_station')
 
 ### Initialize sensors
 
-## 1. Initialize Temp sensor
+## 1. Initialize DS18B20 Temp sensor
 # GPIO pins
 # Assumes /boot/config.txt already has line dtoverlay=w1-gpio
 os.system('modprobe w1-gpio')  # Turns on the GPIO module
@@ -32,6 +34,9 @@ print(f"base_dir: {base_dir}")
 print(f"device_folder: {device_folder}")
 print(f"device_file: {device_file}")
 
+## 2. Initialize DHT11 Humidity sensor on GPIO24
+dhtDevice = adafruit_dht.DHT11(board.D24)
+
 
 ### Sensor read functions
 def read_temp_raw(device_file):
@@ -39,7 +44,7 @@ def read_temp_raw(device_file):
         return f.readlines()
 
 
-def read_temp(device_file, wait_interval=0.1):
+def read_temp_ds18b20(device_file, wait_interval=0.1):
     """Convert the value of the sensor into temp"""
     lines = read_temp_raw(device_file)
     # While the first line does not contain 'YES', wait for 0.2s
@@ -58,18 +63,33 @@ def read_temp(device_file, wait_interval=0.1):
         return temp_c
 
 
+def read_dht11():
+    try:
+        temperature_c = dhtDevice.temperature
+        humidity = dhtDevice.humidity
+        return humidity, temperature_c
+    except RuntimeError as e:
+        print(e)
+
+
 ### Run infinite loop
 while True:
     # Get current datetime
     current_time = datetime.utcnow().strftime('%Y-%m-%dT%H:%M:%SZ')
-    # Read and store Temp sensor value
-    temp = read_temp(device_file)
-    print(temp, type(temp))
+    # Read and store temp ds18b20 sensor value
+    ds18b20_temp = read_temp_ds18b20(device_file)
+    # Read DHT11 humidity and temp
+    dht11_hum, dht11_temp = read_dht11()
+    print(current_time)
+    print(ds18b20_temp)
+    print(dht11_temp, dht11_hum)
     json_body = [{
             "measurement": "tempSensor",
             "time": current_time,
             "fields": {
-                "air_temp": temp}
+                "air_temp": ds18b20_temp,
+                "humidity": dht11_hum,
+                "dht11_temp": dht11_temp}
             }]
     res_code = client.write_points(json_body)
     print(res_code)

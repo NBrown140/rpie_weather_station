@@ -15,7 +15,10 @@ This will install InfluxDB, Grafana, Python3 and the required python packages. T
 `sudo systemctl status influxdb`
 
 ## Run the app
-`python3 weather_station.py`
+
+`sh start.sh`
+
+This shell script will start grafana-server and influxdb (if not already done), as well as execute the script `python3 weather_station.py` put it in the background and keep a log in your current directory.
 
 
 ## Temp sensor:  DS18B20
@@ -26,4 +29,13 @@ https://thepihut.com/blogs/raspberry-pi-tutorials/18095732-sensors-temperature-w
 
 https://pinout.xyz/pinout/1_wire
 
+## Humidity and Temp sensor: DHT11
+Uses serial interface
+Adafruit library already exists to interface sensor. Python library is adafruit-circuitpython-dht.
+
+https://learn.adafruit.com/dht-humidity-sensing-on-raspberry-pi-with-gdocs-logging/python-setup
+
+## Barometer: BMP180
+
+https://tutorials-raspberrypi.com/raspberry-pi-and-i2c-air-pressure-sensor-bmp180/
 
