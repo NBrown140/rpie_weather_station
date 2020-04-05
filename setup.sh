@@ -18,11 +18,14 @@ apt -y update
 # Install
 apt -y install influxdb
 
-
 ### Install grafana ###
 apt-get install -y adduser libfontconfig1
 wget https://dl.grafana.com/oss/release/grafana-rpi_6.7.1_armhf.deb
 dpkg -i grafana-rpi_6.7.1_armhf.deb
+
+### Install Telegraf ###
+wget https://dl.influxdata.com/telegraf/releases/telegraf_1.14.0-1_armhf.deb
+sudo dpkg -i telegraf_1.14.0-1_armhf.deb
 
 
 ### Start InfluxDB service ###
@@ -31,12 +34,16 @@ systemctl start influxdb  # OR service influxdb start
 systemctl unmask influxdb
 systemctl enable influxdb 
 
-
 ### Start Grafana service ###
 systemctl daemon-reload
 systemctl start grafana-server
 # Start at boot
 systemctl enable grafana-server.service
+
+### Start Telegraf Service ###
+systemctl start telegraf
+# Start at boot
+systemctl enable telegraf
 
 
 ### Install python3 and packages ###

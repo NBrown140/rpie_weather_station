@@ -1,7 +1,9 @@
 # Start grafana server
-sudo systemctl start grafana-server
+systemctl start grafana-server
 # Start influxdb database
-sudo systemctl start influxdb
+systemctl start influxdb
+# Start telegraf service
+systemctl start telegraf
 
 # Start python program
 nohup python3 weatherstation.py > weatherstation.log 2>&1 &
