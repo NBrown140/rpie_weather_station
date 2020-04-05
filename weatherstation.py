@@ -68,8 +68,9 @@ def read_dht11():
         temperature_c = dhtDevice.temperature
         humidity = dhtDevice.humidity
         return humidity, temperature_c
-    except RuntimeError as e:
+    except Exception as e:
         print(e)
+        return None, None
 
 
 ### Run infinite loop
@@ -84,13 +85,19 @@ while True:
     print(ds18b20_temp)
     print(dht11_temp, dht11_hum)
     json_body = [{
-            "measurement": "tempSensor",
+            "measurement": "DS18B20",
             "time": current_time,
             "fields": {
-                "air_temp": ds18b20_temp,
-                "humidity": dht11_hum,
-                "dht11_temp": dht11_temp}
+                "temp": ds18b20_temp}
             }]
+    if dht11_hum:
+            json_body.append({
+                "measurement": "DHT11",
+                "time": current_time,
+                "fields": {
+                    "humidity": dht11_hum,
+                    "temp": dht11_temp}
+                })
     res_code = client.write_points(json_body)
     print(res_code)
 
