@@ -28,6 +28,12 @@ wget https://dl.influxdata.com/telegraf/releases/telegraf_1.14.0-1_armhf.deb
 sudo dpkg -i telegraf_1.14.0-1_armhf.deb
 
 
+### Add cpu/gpu temp to telegraf ###
+# https://github.com/TheMickeyMike/raspberrypi-temperature-telegraf
+cp ./inputs.temp.conf /etc/telegraf/telegraf.d/
+usermod -G video telegraf
+
+
 ### Start InfluxDB service ###
 systemctl start influxdb  # OR service influxdb start
 # Start at boot
