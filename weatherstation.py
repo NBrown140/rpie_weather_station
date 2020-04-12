@@ -4,6 +4,7 @@ import time
 from datetime import datetime
 
 from influxdb import InfluxDBClient
+from  influxdb.exceptions import InfluxDBServerError
 import board
 import adafruit_dht
 
@@ -98,11 +99,15 @@ while True:
                     "humidity": dht11_hum,
                     "temp": dht11_temp}
                 })
-    res_code = client.write_points(json_body)
-    print(res_code)
+    try:
+        res_code = client.write_points(json_body)
+        print(res_code)
+    except InfluxDBServerError as e:
+        print(e)
+        continue
 
-    # Wait 1 second 
-    time.sleep(1)
+    # Wait 9 seconds 
+    time.sleep(9)
 
 
 
