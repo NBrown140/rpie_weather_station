@@ -16,6 +16,18 @@ This will install InfluxDB, Grafana, Python3 and the required python packages. T
 
 `sudo systemctl status telegraf`
 
+### Setup I2C
+
+`sudo sh setup_i2c.sh`
+
+At the end of the script, `sudo raspi-config` will run and require user interaction.
+
+Enter `5. Interfacing Options`, `A7 I2C`, `YES`. Then, `sudo reboot`.
+
+Test it worked with:
+
+`sudo i2cdetect -y 1`
+
 ### Run the app
 
 `sudo sh start.sh`
@@ -48,8 +60,10 @@ Adafruit library already exists to interface sensor. Python library is adafruit-
 https://learn.adafruit.com/dht-humidity-sensing-on-raspberry-pi-with-gdocs-logging/python-setup
 
 ### Barometer: BMP180
+Uses I2C interface.
 
 https://tutorials-raspberrypi.com/raspberry-pi-and-i2c-air-pressure-sensor-bmp180/
+https://github.com/adafruit/Adafruit_Python_BMP/blob/master/examples/simpletest.py
 
 
 ## Useful links:

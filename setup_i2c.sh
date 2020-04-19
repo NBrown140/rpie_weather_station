@@ -45,3 +45,7 @@ if hash i2cget 2>/dev/null; then
 else
   apt-get install -y i2c-tools
 fi
+
+# On raspbian versions from 2015 onwards, require activation of the Devietree
+raspi-config
+

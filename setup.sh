@@ -53,7 +53,7 @@ systemctl enable telegraf
 
 
 ### Install python3 and packages ###
-apt -y install python3 python3-pip
+apt -y install python3 python3-pip python3-venv
 python3 -m pip install -U pip setuptools
 python3 -m pip install -r requirements.txt
 

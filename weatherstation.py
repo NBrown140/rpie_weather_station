@@ -1,3 +1,8 @@
+# Print python version for debugging
+import sys
+print(sys.version)
+print(sys.path)
+
 import os
 import glob
 import time
@@ -7,6 +12,7 @@ from influxdb import InfluxDBClient
 from  influxdb.exceptions import InfluxDBServerError
 import board
 import adafruit_dht
+import Adafruit_BMP.BMP085 as BMP085
 
 ### Initialize db connection
 # Connect to local db
@@ -37,6 +43,9 @@ print(f"device_file: {device_file}")
 
 ## 2. Initialize DHT11 Humidity sensor on GPIO24
 dhtDevice = adafruit_dht.DHT11(board.D24)
+
+## 3. Initialize BBMP180 sensor
+bmp180_sensor = BMP085.BMP085()
 
 
 ### Sensor read functions
@@ -74,6 +83,19 @@ def read_dht11():
         return None, None
 
 
+def read_bmp180():
+    try:
+        temp_c = bmp180_sensor.read_temperature()
+        pressure = bmp180_sensor.read_pressure()
+        altitude = bmp180_sensor.read_altitude()
+        sealevel_pressure = bmp180_sensor.read_sealevel_pressure()
+        return temp_c, pressure, altitude, sealevel_pressure
+    except Exception as e:
+        print("Exception occured in read_BMP180()")
+        print(e)
+        return None, None, None, None
+
+
 ### Run infinite loop
 while True:
     # Get current datetime
@@ -82,9 +104,10 @@ while True:
     ds18b20_temp = read_temp_ds18b20(device_file)
     # Read DHT11 humidity and temp
     dht11_hum, dht11_temp = read_dht11()
+    # Read BMP180 pressure et al
+    bmp180_temp, bmp180_pressure, bmp180_alt, bmp180_slpressure = read_bmp180()
+
     print(current_time)
-    print(ds18b20_temp)
-    print(dht11_temp, dht11_hum)
     json_body = [{
             "measurement": "DS18B20",
             "time": current_time,
@@ -99,6 +122,18 @@ while True:
                     "humidity": dht11_hum,
                     "temp": dht11_temp}
                 })
+    if bmp180_pressure:
+        json_body.append({
+            "measurement": "BMP180",
+            "time": current_time,
+            "fields": {
+                "temp": bmp180_temp,
+                "presure": bmp180_pressure,
+                "altitude": bmp180_alt,
+                "sealevel_pressure": bmp180_slpressure}
+            })
+
+    print(json_body)
     try:
         res_code = client.write_points(json_body)
         print(res_code)

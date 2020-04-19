@@ -6,5 +6,5 @@ systemctl start influxdb
 systemctl start telegraf
 
 # Start python program
-nohup python3 weatherstation.py > weatherstation.log 2>&1 &
-
+#nohup python3 weatherstation.py > weatherstation.log 2>&1 &
+nohup python3 weatherstation.py > /dev/null 2>&1 &
